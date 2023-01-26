@@ -1,0 +1,21 @@
+[gd_scene load_steps=6 format=3 uid="uid://bf8j7p3fmhent"]
+
+[ext_resource type="PackedScene" uid="uid://bdudw7uqqdk3a" path="res://tilemaps/ground/Surface.tscn" id="1_0b7a4"]
+[ext_resource type="Script" path="res://tilemaps/ground/WorldGeneration.gd" id="1_gexl6"]
+[ext_resource type="PackedScene" uid="uid://1pddyhyep8xp" path="res://tilemaps/objects/Tree/Tree.tscn" id="2_8odp8"]
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_rc30c"]
+resource_name = "Objects"
+scenes/1/scene = ExtResource("2_8odp8")
+
+[sub_resource type="TileSet" id="TileSet_50s83"]
+sources/1 = SubResource("TileSetScenesCollectionSource_rc30c")
+
+[node name="Surface2" type="Node2D"]
+script = ExtResource("1_gexl6")
+
+[node name="Surface" parent="." instance=ExtResource("1_0b7a4")]
+
+[node name="Objects" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_50s83")
+format = 2

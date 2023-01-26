@@ -1,0 +1,4 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" uid="uid://mkblg6shogai" path="res://tilemaps/objects/Tree/wood-block.png" id="1_qll4s"]
+[ext_resource type="Script" path="res://tilemaps/objects/Tree/WoodBlock.gd" id="2_xf8p0"]

@@ -1,9 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://du4hfcn67iye3"]
+[gd_scene load_steps=8 format=3 uid="uid://bdudw7uqqdk3a"]
 
 [ext_resource type="Texture2D" uid="uid://c0ncdnysg3iry" path="res://tilemaps/ground/tiles.png" id="1_nxypc"]
 [ext_resource type="Texture2D" uid="uid://3kdaqe0kmt1g" path="res://tilemaps/ground/ice-tiles.png" id="1_ynmvx"]
 [ext_resource type="Texture2D" uid="uid://baejadnuedqke" path="res://tilemaps/ground/snow.png" id="2_8qtw7"]
-[ext_resource type="Script" path="res://tilemaps/ground/WorldGeneration.gd" id="2_f2pgt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pam6h"]
 texture = ExtResource("1_nxypc")
@@ -372,20 +371,6 @@ sources/1 = SubResource("TileSetAtlasSource_pvnah")
 sources/0 = SubResource("TileSetAtlasSource_pam6h")
 sources/2 = SubResource("TileSetAtlasSource_h882i")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cjaq2"]
-texture = ExtResource("1_nxypc")
-0:0/0 = 0
-1:0/0 = 0
-2:0/0 = 0
-3:0/0 = 0
-4:0/0 = 0
-5:0/0 = 0
-6:0/0 = 0
-7:0/0 = 0
-
-[sub_resource type="TileSet" id="TileSet_1n2lv"]
-sources/0 = SubResource("TileSetAtlasSource_cjaq2")
-
 [node name="Surface" type="TileMap"]
 tile_set = SubResource("TileSet_1vfee")
 format = 2
@@ -397,9 +382,3 @@ layer_1/y_sort_enabled = false
 layer_1/y_sort_origin = 0
 layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array()
-script = ExtResource("2_f2pgt")
-
-[node name="Objects" type="TileMap" parent="."]
-tile_set = SubResource("TileSet_1n2lv")
-format = 2
-layer_0/z_index = 3
