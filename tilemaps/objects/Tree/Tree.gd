@@ -16,6 +16,7 @@ func _process(delta):
 func _input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton:
 		if event.pressed:
+			print("tree clicked")
 			treeHit()
 			
 func treeHit():

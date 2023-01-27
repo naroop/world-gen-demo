@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://1pddyhyep8xp"]
+[gd_scene load_steps=4 format=3 uid="uid://1pddyhyep8xp"]
 
+[ext_resource type="Script" path="res://tilemaps/objects/Tree/Tree.gd" id="1_3cgv4"]
 [ext_resource type="Texture2D" uid="uid://7673tbm8ruav" path="res://tilemaps/objects/Tree/tree.png" id="1_3rnvs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3y3em"]
 size = Vector2(8, 6)
 
-[node name="Tree" type="StaticBody2D"]
+[node name="Tree" type="StaticBody2D" groups=["Trees"]]
 input_pickable = true
+script = ExtResource("1_3cgv4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 5)

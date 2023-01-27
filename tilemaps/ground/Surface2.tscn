@@ -19,3 +19,4 @@ script = ExtResource("1_gexl6")
 [node name="Objects" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_50s83")
 format = 2
+layer_0/y_sort_enabled = true

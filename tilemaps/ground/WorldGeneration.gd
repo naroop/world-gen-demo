@@ -57,11 +57,17 @@ func _ready():
 	
 func _process(_delta):
 	if Input.is_action_just_pressed("space"):
-		objectsTileMap.clear()
-		surfaceTileMap.clear()
+		clearWorldTileMaps()
 		for biome in Biomes:
 			Biomes[biome].area.clear()
-		#generateTerrain(SCREEN_SIZE)
+		generateTerrain(SCREEN_SIZE)
+
+func clearWorldTileMaps():
+	for node in objectsTileMap.get_children():
+		node.queue_free()
+	surfaceTileMap.clear()
+
+	
 		
 func initializeNoise():
 	noise = FastNoiseLite.new()

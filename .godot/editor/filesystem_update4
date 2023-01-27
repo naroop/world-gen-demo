@@ -2,3 +2,4 @@ res://tilemaps/objects/Tree/Tree.tscn
 res://tilemaps/ground/Surface2.tscn
 res://tilemaps/ground/Surface.tscn
 res://tilemaps/ground/WorldGeneration.gd
+res://tilemaps/objects/Tree/Tree.gd
