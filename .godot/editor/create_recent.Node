@@ -1,7 +1,7 @@
+TileMap
 Sprite2D
 CollisionShape2D
 StaticBody2D
-TileMap
 Label
 Control
 CanvasLayer

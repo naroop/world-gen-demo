@@ -14,24 +14,28 @@
 extends Node2D
 
 var noise: FastNoiseLite
-var SCREEN_SIZE := Vector2i(72, 41) # 7241
+var ISLAND_RADIUS := 5
+var SCREEN_SIZE := Vector2i(ISLAND_RADIUS * 2 + 20, ISLAND_RADIUS * 2 + 20)
+var MAP_CENTER := Vector2i(SCREEN_SIZE.x / 2, SCREEN_SIZE.y / 2)
+
 @onready var surfaceTileMap := $Surface
 @onready var objectsTileMap := $Objects
+@onready var worldBorder := $WorldBorder
 
 ## All spawnable biomes
 ## All tiles inside surfaceTiles and objectTiles should be contained within Tiles
 var Biomes = {
-	'ice': {
+	'water': {
 		'maxAltitude': 0.17,
 		'layer': 0,
-		'surfaceTiles': {'ice-lake': 100.0},
+		'surfaceTiles': {'water': 100.0},
 		'objectTiles' : {},
 		'area': []
 	},
-	'tundra': {
+	'forest': {
 		'maxAltitude': 1.0,
 		'layer': 1,
-		'surfaceTiles': {'snow': 100.0},
+		'surfaceTiles': {'grass': 100.0},
 		'objectTiles' : {'tree': 5.0},
 		'area': []
 	}
@@ -40,19 +44,20 @@ var Biomes = {
 ## Placeholder tiles need to be at Source ID 0 on the Surface TileSet
 ## Tile names need to match the tile names inside of each biome's surfaceTiles.
 var SurfacePlaceholderTiles = {
-	'ice-lake': Vector2i(2, 0),
-	'snow': Vector2i(5, 0) 
+	'water': Vector2i(2, 0),
+	'grass': Vector2i(5, 0) 
 }
 
 ## Terrain (autotile) data for each surface tile.
 ## Each surface tile needs to have a terrain set up, even if there are no autotiles for that tile yet.
 ##	Draw a 3x3 bitmap over the single tile if there is no autotile mask set up yet.
 var TerrainTiles = {
-	'ice-lake':  {'terrainSet': 0, 'terrain': 0},
-	'snow': {'terrainSet': 0, 'terrain': 1},
+	'water':  {'terrainSet': 0, 'terrain': 0},
+	'grass': {'terrainSet': 0, 'terrain': 1},
 }
 
 func _ready():
+	DisplayServer.window_set_size(Vector2(SCREEN_SIZE.x * 16, SCREEN_SIZE.y * 16))
 	generateTerrain(SCREEN_SIZE)
 	
 func _process(_delta):
@@ -67,8 +72,6 @@ func clearWorldTileMaps():
 		node.queue_free()
 	surfaceTileMap.clear()
 
-	
-		
 func initializeNoise():
 	noise = FastNoiseLite.new()
 	noise.set_seed(randi())
@@ -85,20 +88,21 @@ func generateTerrain(screenSize: Vector2i):
 		for y in range(screenSize.y):
 			var altitude = abs(noise.get_noise_2d(x, y))
 			var worldPosition = Vector2i(x, y)
-			
-			if altitude < Biomes.ice.maxAltitude:
-				placeBiomePlaceholderSurfaceTile('ice', worldPosition)
-				placeBiomeObject('ice', worldPosition)
-				Biomes.ice.area.append(worldPosition)
-			elif altitude <= Biomes.tundra.maxAltitude:
-				placeBiomePlaceholderSurfaceTile('tundra', worldPosition)
-				placeBiomeObject('tundra', worldPosition)
-				Biomes.tundra.area.append(worldPosition)
+			if altitude < Biomes.water.maxAltitude or !isTileOnIsland(worldPosition):
+				placeBiomePlaceholderSurfaceTile('water', worldPosition)
+				placeBiomeObject('water', worldPosition)
+				Biomes.water.area.append(worldPosition)
+			elif altitude <= Biomes.forest.maxAltitude:
+				placeBiomePlaceholderSurfaceTile('forest', worldPosition)
+				placeBiomeObject('forest', worldPosition)
+				Biomes.forest.area.append(worldPosition)
 	
 	# Fill all placeholder tiles with the correct terrain
 	for biome in Biomes:
 		for surfaceTile in Biomes[biome].surfaceTiles:
 			surfaceTileMap.set_cells_terrain_connect(Biomes[biome].layer, Biomes[biome].area, TerrainTiles[surfaceTile].terrainSet, TerrainTiles[surfaceTile].terrain, false)
+			
+	placeWorldBorder()
 			
 	
 ## This function may not work if you try and place down two different tiles within the biome
@@ -121,10 +125,23 @@ func placeBiomeObject(biome: String, worldPosition: Vector2i):
 		if roll <= total:
 			objectsTileMap.set_cell(0, worldPosition, 1, Vector2.ZERO, 1)
 			return
+			
+func placeWorldBorder():
+	for x in range(SCREEN_SIZE.x):
+		for y in range(SCREEN_SIZE.y):
+			if x == 0:
+				worldBorder.set_cell(0, Vector2i(x, y), 0, Vector2i(1, 1))
+			elif y == 0 or y == SCREEN_SIZE.y-1:
+				worldBorder.set_cell(0, Vector2i(x, y), 0, Vector2i(1, 1))
+			elif x == SCREEN_SIZE.x-1:
+				worldBorder.set_cell(0, Vector2i(x, y), 0, Vector2i(1, 1))
+				
 
 func setSurfacePlaceholder(worldPosition: Vector2i, tileName: String, biome: String):
 	surfaceTileMap.set_cell(Biomes[biome].layer, worldPosition, 0, SurfacePlaceholderTiles[tileName], 0)
 
-func between(val, start, end):
-	if start <= val and val < end:
-		return true
+func between(val, start, end) -> bool:
+	return start <= val and val < end # i think this still works
+		
+func isTileOnIsland(worldPosition: Vector2i) -> bool:
+	return Vector2(worldPosition).distance_to(Vector2(MAP_CENTER)) <= ISLAND_RADIUS
